@@ -6,9 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Datos de Mortalidad de la Comunidad Valenciana</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="script.js"></script>
   </head>
-  <body class="bg-zinc-100 font-sans px-20" onload="loadBubbles()">
+  <body class="bg-zinc-100 font-sans px-20" onload="bgTasks()">
     
     <h1 class="text-3xl text-center font-bold text-gray-800 my-12">Datos de Mortalidad de la Comunidad Valenciana</h1>
     
@@ -78,7 +77,36 @@
     <script>
 
         // onload
-        function loadBubbles() {
+        function bgTasks() {
+
+            // indexeddb
+            loadDB()
+
+            // load bubbles
+            loadBubbles()
+        }
+
+        function loadDB() {
+
+            var db
+
+            if (!window.indexedDB) {
+                console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+            }
+
+            var request = window.indexedDB.open("MyTestDatabase", 1);
+
+            request.onerror = function(event) {
+                console.error("Database error: " + event.target.errorCode);
+            };
+            request.onsuccess = function(event) {
+                db = event.target.result;
+            };
+              
+        }
+
+        function loadBubbles(){
+
             for (let i = 1; i <= 5; i++) {            
                 var c = document.getElementById("c" + i.toString());
                 var ctx = c.getContext("2d");
