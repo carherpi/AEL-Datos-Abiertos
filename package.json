@@ -13,5 +13,8 @@
   },
   "nodemonConfig": {
     "ext": "js,html"
+  },
+  "dependencies": {
+    "live-server": "^1.2.1"
   }
 }
