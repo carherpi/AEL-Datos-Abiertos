@@ -10,6 +10,8 @@
   <body class="bg-zinc-100 font-sans px-20" onload="bgTasks()">
     
     <h1 class="text-3xl text-center font-bold text-gray-800 my-12">Datos de Mortalidad de la Comunidad Valenciana</h1>
+
+    <button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl" onclick="redraw()">Redraw</button>   
     
     <div class="grid grid-cols-2 gap-4">
         <div class="space-y-20">    
@@ -23,31 +25,31 @@
             </div>
             <div class="flex flex-row">
                 <div>
-                    <canvas id="c1" width="150" height="150">
+                    <canvas id="c0" width="150" height="150">
                         Your browser does not support the HTML5 canvas tag.
                     </canvas>
                     <p class="text-center text-gray-800 font-semibold">Septicemia</p>
                 </div>
                 <div>
-                    <canvas id="c2" width="150" height="150">
+                    <canvas id="c1" width="150" height="150">
                         Your browser does not support the HTML5 canvas tag.
                     </canvas>
                     <p class="text-center text-gray-800 font-semibold">Hepatitis Viral</p>
                 </div>
                 <div>
-                    <canvas id="c3" width="150" height="150">
+                    <canvas id="c2" width="150" height="150">
                         Your browser does not support the HTML5 canvas tag.
                     </canvas>
                     <p class="text-center text-gray-800 font-semibold">Tumor Estomago</p>
                 </div>
                 <div>
-                    <canvas id="c4" width="150" height="150">
+                    <canvas id="c3" width="150" height="150">
                         Your browser does not support the HTML5 canvas tag.
                     </canvas>
                     <p class="text-center text-gray-800 font-semibold">Tumor Recto</p>
                 </div>
                 <div>
-                    <canvas id="c5" width="150" height="150">
+                    <canvas id="c4" width="150" height="150">
                         Your browser does not support the HTML5 canvas tag.
                     </canvas>
                     <p class="text-center text-gray-800 font-semibold">Tumor Pulmón</p>
@@ -94,7 +96,7 @@
                 console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
             }
 
-            var request = window.indexedDB.open("MyTestDatabase", 1);
+            var request = window.indexedDB.open("Database", 1);
 
             request.onerror = function(event) {
                 console.error("Database error: " + event.target.errorCode);
@@ -107,13 +109,59 @@
 
         function loadBubbles(){
 
-            for (let i = 1; i <= 5; i++) {            
+            for (let i = 0; i < 5; i++) {            
                 var c = document.getElementById("c" + i.toString());
                 var ctx = c.getContext("2d");
                 ctx.beginPath();
-                ctx.arc(75, 75, 50 / i, 0, 2 * Math.PI);
+                if (i == 0) {
+                    ctx.arc(75, 75, 70, 0, 2 * Math.PI);
+                } else {
+                    ctx.arc(75, 75, 70 / i, 0, 2 * Math.PI);
+                }
                 ctx.stroke();
             }
+        }
+
+
+        function redraw() {
+
+            // Máx radio de las burbujas
+            max = 70;
+
+            // Devuelve el top5 enfermedades. TODO: Aplicar criterios
+            top5 = getTop5CauseOfDeath();
+
+            console.log(top5);
+
+            // Calcula el total de muertes de las top5 enfermedades
+            total = 0;
+            for (let i = 0; i < 5; i++) {
+                total += top5[i]["Total"];
+            }
+            
+            // Guarda el porcentaje más alto
+            max_porcentaje = (top5[0]["Total"] * 100 / total) / 100
+
+
+            console.log("Total: " + total, " Máx Porc: " + max_porcentaje);
+
+            for (let i = 0; i < 5; i++) {
+
+                // Calcula el porcentaje relativo con respecto al total
+                porcentaje = (top5[i]["Total"] * 100 / total) / 100
+
+                factor = (porcentaje * 1 / max_porcentaje)
+
+                console.log("Porcentaje: " + porcentaje, " Factor: " + factor)
+
+                var c = document.getElementById("c" + i.toString());
+                var ctx = c.getContext("2d");
+                ctx.clearRect(0, 0, c.width, c.height);
+                ctx.beginPath();
+                ctx.arc(75, 75, max * factor, 0, 2 * Math.PI);
+                ctx.stroke();                
+            }
+
         }
 
 
@@ -131,7 +179,30 @@
 
         function getTop5CauseOfDeath(year, province, municipality, genre, age) {
 
-            //return dict {string:int}
+            var top5 = [
+                { 
+                    Disease: "Septicemia",
+                    Total: 50,
+                },
+                { 
+                    Disease: "Hepatitis Viral",
+                    Total: 5,
+                },
+                { 
+                    Disease: "Tumor Estomago",
+                    Total: 5,
+                },
+                { 
+                    Disease: "Tumor Recto",
+                    Total: 30,
+                },
+                { 
+                    Disease: "Tumor Pulmón",
+                    Total: 1,
+                },
+            ]
+
+            return top5
             
         }
 
