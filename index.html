@@ -11,7 +11,7 @@
     
     <h1 class="text-3xl text-center font-bold text-gray-800 my-12">Datos de Mortalidad de la Comunidad Valenciana</h1>
 
-    <button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl" onclick=" redrawCircles(); rewriteSentences(); redrawMap();">Redraw</button>   
+    
     
     <div class="grid grid-cols-2 gap-4">
         <div class="space-y-20">    
@@ -23,57 +23,60 @@
                 <button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl">GÉNERO</button>
                 <button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl">EDAD</button>
             </div>
-            <div class="flex flex-row">
+
+            <button class="bg-blue-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl" onclick="search()">Search</button>
+
+            <div id="circles-area" class="flex flex-row" hidden>
                 <div>
                     <canvas id="c0" width="150" height="150">
                         Your browser does not support the HTML5 canvas tag.
                     </canvas>
-                    <p class="text-center text-gray-800 font-semibold">Septicemia</p>
+                    <p id="e0" class="text-center text-gray-800 font-semibold"></p>
                 </div>
                 <div>
                     <canvas id="c1" width="150" height="150">
                         Your browser does not support the HTML5 canvas tag.
                     </canvas>
-                    <p class="text-center text-gray-800 font-semibold">Hepatitis Viral</p>
+                    <p id="e1" class="text-center text-gray-800 font-semibold"></p>
                 </div>
                 <div>
                     <canvas id="c2" width="150" height="150">
                         Your browser does not support the HTML5 canvas tag.
                     </canvas>
-                    <p class="text-center text-gray-800 font-semibold">Tumor Estomago</p>
+                    <p id="e2" class="text-center text-gray-800 font-semibold"></p>
                 </div>
                 <div>
                     <canvas id="c3" width="150" height="150">
                         Your browser does not support the HTML5 canvas tag.
                     </canvas>
-                    <p class="text-center text-gray-800 font-semibold">Tumor Recto</p>
+                    <p id="e3" class="text-center text-gray-800 font-semibold"></p>
                 </div>
                 <div>
                     <canvas id="c4" width="150" height="150">
                         Your browser does not support the HTML5 canvas tag.
                     </canvas>
-                    <p class="text-center text-gray-800 font-semibold">Tumor Pulmón</p>
+                    <p id="e4" class="text-center text-gray-800 font-semibold"></p>
                 </div>
             </div>
-            <div>
+            <div id="information-area" hidden>
                 <h2 class="text-2xl text-gray-800 font-bold">Información:</h2>
                 <div class="flex flex-col space-y-1">                
-                    <p id="s0" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                    <p id="s1" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                    <p id="s2" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                    <p id="s3" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                    <p id="s4" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                    <p id="s5" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                    <p id="s0" class="text-lg text-gray-800 "></p>
+                    <p id="s1" class="text-lg text-gray-800 "></p>
+                    <p id="s2" class="text-lg text-gray-800 "></p>
+                    <p id="s3" class="text-lg text-gray-800 "></p>
+                    <p id="s4" class="text-lg text-gray-800 "></p>
+                    <p id="s5" class="text-lg text-gray-800 "></p>
                 </div>
             </div>
         </div>
-        <div class="space-y-2">
+        <div id="map-area" class="space-y-2" hidden>
             <div class="flex flex-row place-content-center text-emerald-600 space-x-2">
                 <div class="w-5"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="location-dot" class="svg-inline--fa fa-location-dot" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M168.3 499.2C116.1 435 0 279.4 0 192C0 85.96 85.96 0 192 0C298 0 384 85.96 384 192C384 279.4 267 435 215.7 499.2C203.4 514.5 180.6 514.5 168.3 499.2H168.3zM192 256C227.3 256 256 227.3 256 192C256 156.7 227.3 128 192 128C156.7 128 128 156.7 128 192C128 227.3 156.7 256 192 256z"></path></svg></div>
                 <h2 id="m1" class="text-2xl font-semibold">Alcoy</h2>                
             </div>
             
-            <iframe class="w-full h-full drop-shadow-xl"  id="gmap_canvas" src="https://maps.google.com/maps?q=Alcoy&t=&z=7&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">                            
+            <iframe class="w-full h-full drop-shadow-xl"  id="gmap_canvas" src="https://maps.google.com/maps?hl=es&q=Alcoy&t=&z=7&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">                            
             </iframe>
         </div>
     </div>
@@ -83,7 +86,7 @@
         // Global variables
         var year = '2016';
         var province = 'Valencia';
-        var municipality = 'Rafelbuñol';
+        var municipality = 'Gandía';
         var cause_of_death = 'Septicemia';
         var genre = 'Hombre';
         var age = '>50';
@@ -95,12 +98,12 @@
             loadDB()
 
             // load bubbles
-            loadBubbles()
+            //loadBubbles()
         }
 
         function loadDB() {
 
-            var db
+            var db;
 
             if (!window.indexedDB) {
                 console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
@@ -172,6 +175,12 @@
                 ctx.stroke();                
             }
 
+
+            // Escribir top5 enfermedades
+            for (let i = 0; i < 5; i++) {
+                document.getElementById("e" + i).innerHTML = top5[i]["Disease"];            
+            }
+
         }
 
 
@@ -218,7 +227,19 @@
             document.getElementById("m1").innerHTML = `${municipality}`;
 
             var ref = document.getElementById("gmap_canvas");    
-            ref.src = `https://maps.google.com/maps?q=${municipality}&t=&z=7&ie=UTF8&iwloc=&output=embed`
+            ref.src = `https://maps.google.com/maps?hl=es&q=${municipality}&t=&z=7&ie=UTF8&iwloc=&output=embed`;
+
+        }
+
+        function search() {
+
+            document.getElementById("map-area").hidden = false;
+            document.getElementById("circles-area").hidden = false;
+            document.getElementById("information-area").hidden = false;
+            
+            redrawCircles(); 
+            rewriteSentences(); 
+            redrawMap();
         }
 
         // "API"
