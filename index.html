@@ -11,7 +11,7 @@
     
     <h1 class="text-3xl text-center font-bold text-gray-800 my-12">Datos de Mortalidad de la Comunidad Valenciana</h1>
 
-    <button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl" onclick="redraw()">Redraw</button>   
+    <button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl" onclick=" redrawCircles(); rewriteSentences(); redrawMap();">Redraw</button>   
     
     <div class="grid grid-cols-2 gap-4">
         <div class="space-y-20">    
@@ -57,18 +57,20 @@
             </div>
             <div>
                 <h2 class="text-2xl text-gray-800 font-bold">Información:</h2>
-                <p class="text-lg text-gray-800 font-semibold">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                <p class="text-lg text-gray-800 font-semibold">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                <p class="text-lg text-gray-800 font-semibold">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                <p class="text-lg text-gray-800 font-semibold">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                <p class="text-lg text-gray-800 font-semibold">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                <p class="text-lg text-gray-800 font-semibold">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                <div class="flex flex-col space-y-1">                
+                    <p id="s0" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                    <p id="s1" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                    <p id="s2" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                    <p id="s3" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                    <p id="s4" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                    <p id="s5" class="text-lg text-gray-800 ">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                </div>
             </div>
         </div>
         <div class="space-y-2">
             <div class="flex flex-row place-content-center text-emerald-600 space-x-2">
                 <div class="w-5"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="location-dot" class="svg-inline--fa fa-location-dot" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M168.3 499.2C116.1 435 0 279.4 0 192C0 85.96 85.96 0 192 0C298 0 384 85.96 384 192C384 279.4 267 435 215.7 499.2C203.4 514.5 180.6 514.5 168.3 499.2H168.3zM192 256C227.3 256 256 227.3 256 192C256 156.7 227.3 128 192 128C156.7 128 128 156.7 128 192C128 227.3 156.7 256 192 256z"></path></svg></div>
-                <h2 class="text-2xl font-semibold">Alcoy</h2>                
+                <h2 id="m1" class="text-2xl font-semibold">Alcoy</h2>                
             </div>
             
             <iframe class="w-full h-full drop-shadow-xl"  id="gmap_canvas" src="https://maps.google.com/maps?q=Alcoy&t=&z=7&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">                            
@@ -77,6 +79,14 @@
     </div>
 
     <script>
+
+        // Global variables
+        var year = '2016';
+        var province = 'Valencia';
+        var municipality = 'Rafelbuñol';
+        var cause_of_death = 'Septicemia';
+        var genre = 'Hombre';
+        var age = '>50';
 
         // onload
         function bgTasks() {
@@ -123,7 +133,7 @@
         }
 
 
-        function redraw() {
+        function redrawCircles() {
 
             // Máx radio de las burbujas
             max = 70;
@@ -165,11 +175,59 @@
         }
 
 
+        function rewriteSentences() {
+            
+
+            // s0
+            document.getElementById("s0").innerHTML = `En ${municipality} hubo un total de ${totalDeaths} fallecimientos en el año ${year}.`;
+
+
+            // s1
+            var totalDeaths = getTotalDeaths();
+
+            document.getElementById("s1").innerHTML = `La causa de fallecimiento más común en el año ${year} en el municipio de ${municipality} es ${cause_of_death}.`;
+
+
+            // s2
+            var porcentajeS2 = 1 /* TODO: Crear función que calcule esto */
+
+            document.getElementById("s2").innerHTML = `${porcentajeS2} de cada 100 fallecimientos de ${genre} mayores de ${age} años en ${municipality} es debido a ${cause_of_death}.`;
+
+
+            // s3
+            var porcentajeS3 = '2' /* TODO: Crear función que calcule esto */
+
+            document.getElementById("s3").innerHTML = `${municipality} representa un ${porcentajeS3}% del total de fallecimientos de la Comunidad Valenciana.`;
+
+
+            // s4
+            var rankingMunicipality = '3' /* TODO: Crear función que calcule esto */
+            var rankingRegion = '17' /* TODO: Crear función que calcule esto */
+
+            document.getElementById("s4").innerHTML = `${municipality} es la ${rankingMunicipality}º población más grande de la provincia de ${province} y la ${rankingRegion}º de la Comunidad Valenciana.`;
+
+
+            // s5
+            var porcentajeS5 = '60' /* TODO: Crear función que calcule esto */
+
+            document.getElementById("s5").innerHTML = `El ${porcentajeS5}% de los fallecimientos de ${cause_of_death} fueron ${genre}.`;
+        }
+
+        function redrawMap() {
+            // m1
+            document.getElementById("m1").innerHTML = `${municipality}`;
+
+            var ref = document.getElementById("gmap_canvas");    
+            ref.src = `https://maps.google.com/maps?q=${municipality}&t=&z=7&ie=UTF8&iwloc=&output=embed`
+        }
+
         // "API"
 
-        function getTotalDeaths(year, province, municipality, cause_of_death, genre, age) {
+        function getTotalDeaths() {
+            // year, province, municipality, cause_of_death, genre, age
 
-            // return int
+
+            return '250';
         }
 
         function getMostCommonCauseOfDeath(year, province, municipality, genre, age) {
