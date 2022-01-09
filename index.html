@@ -72,7 +72,7 @@
         <div id="map-area" class="space-y-2" hidden>
             <div class="flex flex-row place-content-center text-emerald-600 space-x-2">
                 <div class="w-5"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="location-dot" class="svg-inline--fa fa-location-dot" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M168.3 499.2C116.1 435 0 279.4 0 192C0 85.96 85.96 0 192 0C298 0 384 85.96 384 192C384 279.4 267 435 215.7 499.2C203.4 514.5 180.6 514.5 168.3 499.2H168.3zM192 256C227.3 256 256 227.3 256 192C256 156.7 227.3 128 192 128C156.7 128 128 156.7 128 192C128 227.3 156.7 256 192 256z"></path></svg></div>
-                <h2 id="m1" class="text-2xl font-semibold"></h2>                
+                <h2 id="m1" class="text-2xl font-semibold"></h2>
             </div>
             
             <iframe class="w-full h-full drop-shadow-xl"  id="gmap_canvas" src="https://maps.google.com/maps?hl=es&q=Alcoy&t=&z=7&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">                            
@@ -85,12 +85,14 @@
         // Global variables
         var year = '2016';
         var province = 'VALENCIA';
-        var municipality = 'PATERNA';
+        var municipality = 'SAGUNTO';
         var cause_of_death = 'ALL';
         var genre = 'ALL';
-        var age = '20 - 24';
+        var age = 'ALL';
 
+		// Other global vaiarbles
         var data = getData(); // load local data
+		var most_common_dict = {};
         console.log(data[0])
 
         
@@ -160,16 +162,22 @@
 
 
         function rewriteSentences() {
+
+			var population = `${province == 'ALL' ? 'la Comunidad Valenciana ': `${municipality == 'ALL' ? 'la provincia de ' + `${province}` : `el municipio de ${municipality}`}`}`;
+
+			var people = `${genre == 'ALL' ? '' : `${genre == 'HOMBRE' ? ' de ' + genre + 's' : ' de ' + genre +'es'}`}`;
             
 
             // s0
             var totalDeaths = getTotalDeaths();
 
-            document.getElementById("s0").innerHTML = `En ${municipality} hubo de ${totalDeaths} fallecimientos en el año ${year}.`;
+            document.getElementById("s0").innerHTML = `En  ${population} ${totalDeaths == 1 ? ' hubo ' + `${totalDeaths}` +  ' fallecimiento' : ' hubieron ' + `${totalDeaths}` + ' fallecimientos'} ${people} en el año ${year}.`;
 
 
             // s1            
-            document.getElementById("s1").innerHTML = `La causa de fallecimiento más común en el año ${year} en el municipio de ${municipality} es ${cause_of_death}.`;
+			var most_common = getMostCommonCauseOfDeath();
+
+            document.getElementById("s1").innerHTML = `La causa más común de fallecimiento ${people} en ${population}  es ${most_common[0]} con un total de ${most_common[1]}.`;
 
 
             // s2
@@ -234,7 +242,7 @@
             return false;
         }
         
-        
+
         // "API"
 
         function getTotalDeaths() {
@@ -245,13 +253,38 @@
                   total_deaths += element['NUM_FALLECIDOS']
                 }
             });
-			    return total_deaths;
+
+			return total_deaths;
 
         }
 
-        function getMostCommonCauseOfDeath(year, province, municipality, genre, age) {
+        function getMostCommonCauseOfDeath() {
 
-            // return string
+            // recorrer todos los datos           			
+            data.forEach(element => {				
+                if (checkElement(element)) {
+					if (element['DESC_CAUSA'] in most_common_dict) {
+						most_common_dict[element['DESC_CAUSA']] += element['NUM_FALLECIDOS'];
+					} else {
+						most_common_dict[element['DESC_CAUSA']] = element['NUM_FALLECIDOS'];
+					}
+                }
+            });
+
+			console.log(most_common_dict);
+
+			// Busca la top1 enfermedad en el objeto de muertes
+			let most_common_cause_of_death = [undefined, 0];
+
+			Object.entries(most_common_dict).forEach(disease => {
+				if (disease[1] > most_common_cause_of_death[1]) {
+					most_common_cause_of_death = disease;
+				}
+			});
+
+			console.log(most_common_cause_of_death);
+
+			return most_common_cause_of_death;
         }
 
         function getTop5CauseOfDeath(year, province, municipality, genre, age) {
