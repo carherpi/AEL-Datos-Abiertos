@@ -234,20 +234,19 @@
             return false;
         }
         
+        
         // "API"
 
         function getTotalDeaths() {
 
-            // year, province, municipality, cause_of_death, genre, age
-            
             let total_deaths = 0;
             data.forEach(element => {
                 if (checkElement(element)) {
                   total_deaths += element['NUM_FALLECIDOS']
                 }
             });
+			    return total_deaths;
 
-			return total_deaths;
         }
 
         function getMostCommonCauseOfDeath(year, province, municipality, genre, age) {
