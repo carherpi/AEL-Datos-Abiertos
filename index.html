@@ -85,9 +85,9 @@
         // Global variables
         var year = '2016';
         var province = 'VALENCIA';
-        var municipality = 'SAGUNTO';
+        var municipality = 'GANDIA';
         var cause_of_death = 'ALL';
-        var genre = 'ALL';
+        var genre = 'MUJER';
         var age = 'ALL';
 
 		// Other global vaiarbles
@@ -169,9 +169,9 @@
             
 
             // s0
-            var totalDeaths = getTotalDeaths();
+            var total_deaths = getTotalDeaths();
 
-            document.getElementById("s0").innerHTML = `En  ${population} ${totalDeaths == 1 ? ' hubo ' + `${totalDeaths}` +  ' fallecimiento' : ' hubieron ' + `${totalDeaths}` + ' fallecimientos'} ${people} en el año ${year}.`;
+            document.getElementById("s0").innerHTML = `En  ${population} ${total_deaths == 1 ? ' hubo ' + `${total_deaths}` +  ' fallecimiento' : ' hubieron ' + `${total_deaths}` + ' fallecimientos'} ${people} en el año ${year}.`;
 
 
             // s1            
@@ -181,7 +181,7 @@
 
 
             // s2
-            var porcentajeS2 = 1 /* TODO: Crear función que calcule esto */
+            var porcentajeS2 = calculatePercentageOfDeaths(total_deaths, most_common);
 
             document.getElementById("s2").innerHTML = `${porcentajeS2} de cada 100 fallecimientos de ${genre == 'Hombre' ? genre + 's' : genre +'es'} mayores de ${age} años en ${municipality} es debido a ${cause_of_death}.`;
 
@@ -316,10 +316,9 @@
             
         }
 
-        function getPopulationStatistics(year, province, municipality, cause_of_death, genre, age) {
-
-            // return Array Strings
-        }
+		function calculatePercentageOfDeaths(total_deaths, most_common) {
+			return Math.round((most_common[1] * 100 / total_deaths));
+		}
 
 
         // "DATA"
