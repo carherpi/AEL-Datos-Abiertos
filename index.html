@@ -10,7 +10,7 @@
 
   <body class="bg-zinc-100 font-sans px-20">
     
-    <h1 class="text-3xl text-center font-bold text-gray-800 my-12">Datos de Mortalidad de la Comunidad Valenciana</h1>
+    <h1 class="text-3xl text-center font-bold text-gray-800 my-12">Datos Médicos de Mortalidad de la Comunidad Valenciana</h1>
 
     <div class="grid grid-cols-2 gap-4">
         <div class="space-y-20">    
@@ -84,18 +84,17 @@
 
         // Global variables
         var year = '2016';
-        var province = 'Valencia';
-        var municipality = 'Gandía';
-        var cause_of_death = 'Septicemia';
-        var genre = 'Hombre';
-        var age = '>50';
+        var province = 'VALENCIA';
+        var municipality = 'PATERNA';
+        var cause_of_death = 'ALL';
+        var genre = 'ALL';
+        var age = '20 - 24';
 
-        var data = getData();
+        var data = getData(); // load local data
         console.log(data[0])
 
         
         // Graphics
-
         function loadBubbles(){
 
             for (let i = 0; i < 5; i++) {            
@@ -166,7 +165,7 @@
             // s0
             var totalDeaths = getTotalDeaths();
 
-            document.getElementById("s0").innerHTML = `En ${municipality} hubo un total de ${totalDeaths} fallecimientos en el año ${year}.`;
+            document.getElementById("s0").innerHTML = `En ${municipality} hubo de ${totalDeaths} fallecimientos en el año ${year}.`;
 
 
             // s1            
@@ -216,17 +215,39 @@
             redrawCircles(); 
             rewriteSentences(); 
             redrawMap();
+           
+            console.log(getTotalDeaths());
 
         }
 
+        // Comprueba si el elemento es válido
+        function checkElement(element) {
+            if ((element['ANYO'] == year || year == 'ALL' )&& 
+				(element['NOM_PROV'] == province || province == 'ALL' ) &&
+				(element['NOM_MUN'] == municipality || municipality == 'ALL' ) &&
+				(element['DESC_CAUSA'] == cause_of_death || cause_of_death == 'ALL' ) &&
+				(element['DESC_GENERO'] == genre || genre == 'ALL' ) &&
+				(element['RANGO_EDAD'] == age || age == 'ALL' )) {
+
+              	return true;
+            }
+            return false;
+        }
         
         // "API"
 
         function getTotalDeaths() {
+
             // year, province, municipality, cause_of_death, genre, age
+            
+            let total_deaths = 0;
+            data.forEach(element => {
+                if (checkElement(element)) {
+                  total_deaths += element['NUM_FALLECIDOS']
+                }
+            });
 
-
-            return '250';
+			return total_deaths;
         }
 
         function getMostCommonCauseOfDeath(year, province, municipality, genre, age) {
