@@ -78,13 +78,9 @@
             <iframe class="w-full h-full drop-shadow-xl"  id="gmap_canvas" src="https://maps.google.com/maps?hl=es&q=Alcoy&t=&z=7&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">                            
             </iframe>
         </div>
-    </div>
+    </div>  
 
-    <script src="/js/data.js"></script>     
-
-    <script>
-
-        
+    <script>        
 
         // Global variables
         var year = '2016';
@@ -93,6 +89,9 @@
         var cause_of_death = 'Septicemia';
         var genre = 'Hombre';
         var age = '>50';
+
+        var data = getData();
+        console.log(data[0])
 
         
         // Graphics
@@ -218,8 +217,6 @@
             rewriteSentences(); 
             redrawMap();
 
-            // TODO: Parse csv file
-            console.log(getData()[0]);
         }
 
         
