@@ -228,8 +228,6 @@
 		// Menu
 		function activeDropMenu(id) {
 
-
-
 			switch (id) {
 				case 'b0':
 					year = document.getElementById(id).value;
@@ -329,6 +327,8 @@
 
 		function rewriteSentences() {
 
+			var time = `${year == 'ALL' ? ' en todos los años': ' en el año ' + year }`;
+
 			var population = `${province == 'ALL' ? ' la Comunidad Valenciana ': `${municipality == 'ALL' ? 'la provincia de ' + `${province}` : `el municipio de ${municipality}`}`}`;
 
 			var people = `${genre == 'ALL' ? '' : `${genre == 'HOMBRE' ? ' de ' + genre + 's' : ' de ' + genre +'es'}`}`;
@@ -338,7 +338,7 @@
 			// s0
 			var total_local_deaths = getTotalDeaths();
 
-			document.getElementById("s0").innerHTML = `En  ${population} ${total_local_deaths == 1 ? ' hubo ' + `${total_local_deaths}` +  ' fallecimiento' : ' hubieron ' + `${total_local_deaths}` + ' fallecimientos'} ${people} en el año ${year}.`;
+			document.getElementById("s0").innerHTML = `En  ${population} ${total_local_deaths == 1 ? ' hubo ' + `${total_local_deaths}` +  ' fallecimiento' : ' hubieron ' + `${total_local_deaths}` + ' fallecimientos'} ${people} ${time}.`;
 
 
 			// s1            
