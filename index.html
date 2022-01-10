@@ -251,7 +251,6 @@
 									
 			}
 
-			console.log("Search!")
 			search();
 		}
 
@@ -274,27 +273,40 @@
 
 		function redrawCircles() {
 
+			// Borrar circulos y textos
+			for (let i = 0; i < 5; i++) {            
+				var c = document.getElementById("c" + i.toString());
+				var ctx = c.getContext("2d");
+				ctx.clearRect(0, 0, c.width, c.height);
+
+				// borar textos
+				document.getElementById("e" + i).innerHTML = ''
+				document.getElementById("n" + i).innerHTML = ''
+			}
+
 			// Máx radio de las burbujas
 			max = 70;
 
 			// Devuelve el top5 enfermedades. TODO: Aplicar criterios
 			top5 = getTop5CauseOfDeath();
 
-			//console.log(top5);
+			console.log(top5);
 
 			// Calcula el total de muertes de las top5 enfermedades
 			total = 0;
-			for (let i = 0; i < 5; i++) {
+			for (let i = 0; i < top5.length; i++) {
 				total += top5[i][1];
 			}
 			
 			// Guarda el porcentaje más alto
-			max_porcentaje = (top5[0][1] * 100 / total) / 100
+			if (top5[0][1] != undefined) {
+				max_porcentaje = (top5[0][1] * 100 / total) / 100
+			}
 
 
 			//console.log("Total: " + total, " Máx Porc: " + max_porcentaje);
 
-			for (let i = 0; i < 5; i++) {
+			for (let i = 0; i < top5.length; i++) {
 
 				// Calcula el porcentaje relativo con respecto al total
 				porcentaje = (top5[i][1] * 100 / total) / 100
@@ -312,14 +324,10 @@
 			}
 
 
-			// Escribir top5 enfermedades
-			for (let i = 0; i < 5; i++) {
-				document.getElementById("e" + i).innerHTML = top5[i][0];            
-			}
-
-			// Escribir número de top5 enfermedades
-			for (let i = 0; i < 5; i++) {
-				document.getElementById("n" + i).innerHTML = top5[i][1];            
+			// Escribir top5 enfermedades y Escribir número de top5 enfermedades
+			for (let i = 0; i < top5.length; i++) {
+				document.getElementById("e" + i).innerHTML = top5[i][0];   
+				document.getElementById("n" + i).innerHTML = top5[i][1];  				
 			}
 
 		}
@@ -428,8 +436,6 @@
 		// Calcula el número total de muertes en base a los parámetros elegidos por el usuario
 		function getTotalDeaths() {
 
-			console.log(data)
-
 			let total_deaths = 0;
 			data.forEach(element => {
 				if (checkElement(element)) {
@@ -444,7 +450,7 @@
 		function getMostCommonCauseOfDeath() {
 
 			most_common_dict = {}
-			
+
 			// recorrer todos los datos           			
 			data.forEach(element => {				
 				if (checkElement(element)) {
