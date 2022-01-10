@@ -25,6 +25,7 @@
 
 			<button class="bg-blue-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl" onclick="search()">Search</button>
 
+
 			<div id="circles-area" class="flex flex-row" hidden>
 				<div>
 					<canvas id="c0" width="150" height="150">
@@ -85,9 +86,9 @@
 		// User variables
 		var year = '2016';
 		var province = 'VALENCIA';
-		var municipality = 'ALL';
+		var municipality = 'SAGUNTO';
 		var cause_of_death = 'ALL';
-		var genre = 'ALL';
+		var genre = 'HOMBRE';
 		var age = 'ALL';
 
 		// Global vaiarbles
@@ -127,11 +128,11 @@
 			// Calcula el total de muertes de las top5 enfermedades
 			total = 0;
 			for (let i = 0; i < 5; i++) {
-				total += top5[i]["Total"];
+				total += top5[i][1];
 			}
 			
 			// Guarda el porcentaje más alto
-			max_porcentaje = (top5[0]["Total"] * 100 / total) / 100
+			max_porcentaje = (top5[0][1] * 100 / total) / 100
 
 
 			//console.log("Total: " + total, " Máx Porc: " + max_porcentaje);
@@ -139,7 +140,7 @@
 			for (let i = 0; i < 5; i++) {
 
 				// Calcula el porcentaje relativo con respecto al total
-				porcentaje = (top5[i]["Total"] * 100 / total) / 100
+				porcentaje = (top5[i][1] * 100 / total) / 100
 
 				factor = (porcentaje * 1 / max_porcentaje)
 
@@ -156,7 +157,7 @@
 
 			// Escribir top5 enfermedades
 			for (let i = 0; i < 5; i++) {
-				document.getElementById("e" + i).innerHTML = top5[i]["Disease"];            
+				document.getElementById("e" + i).innerHTML = top5[i][0];            
 			}
 
 		}
@@ -230,8 +231,8 @@
 
 			total_community_deaths  = totalCommunityDeaths();
 			
-			redrawCircles(); 
 			rewriteSentences(); 
+			redrawCircles(); 			
 			redrawMap();  
 
 		}
@@ -300,35 +301,20 @@
 				}
 			});
 
-			console.log(most_common_cause_of_death);
+			//console.log(most_common_cause_of_death);
 
 			return most_common_cause_of_death;
 		}
 
-		function getTop5CauseOfDeath(year, province, municipality, genre, age) {
+		function getTop5CauseOfDeath() {
+			
 
-			var top5 = [
-				{ 
-					Disease: "Septicemia",
-					Total: 50,
-				},
-				{ 
-					Disease: "Hepatitis Viral",
-					Total: 5,
-				},
-				{ 
-					Disease: "Tumor Estomago",
-					Total: 5,
-				},
-				{ 
-					Disease: "Tumor Recto",
-					Total: 30,
-				},
-				{ 
-					Disease: "Tumor Pulmón",
-					Total: 1,
-				},
-			]
+			let most_common_array = Object.entries(most_common_dict);
+			let sorted = most_common_array.sort((a, b) => a[1] - b[1]);
+
+			var top5 = sorted.slice(-5).reverse(); // top 5 descendant
+
+			//console.log(top5);
 
 			return top5
 			
