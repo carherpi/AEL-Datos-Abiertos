@@ -13,7 +13,7 @@
 	<h1 class="text-3xl text-center font-bold text-gray-800 my-12">Datos Médicos de Mortalidad de la Comunidad Valenciana</h1>
 
 	<div class="grid grid-cols-2 gap-4">
-		<div class="space-y-20">    
+		<div class="space-y-10">    
 			<div class="text-sm  flex flex-row space-x-4 ">
 				<button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl">AÑO</button>                
 				<button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl">PROVINCIA</button>
@@ -25,37 +25,44 @@
 
 			<button class="bg-blue-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl" onclick="search()">Search</button>
 
-
-			<div id="circles-area" class="flex flex-row" hidden>
-				<div>
-					<canvas id="c0" width="150" height="150">
-						Your browser does not support the HTML5 canvas tag.
-					</canvas>
-					<p id="e0" class="text-center text-gray-800 font-semibold"></p>
-				</div>
-				<div>
-					<canvas id="c1" width="150" height="150">
-						Your browser does not support the HTML5 canvas tag.
-					</canvas>
-					<p id="e1" class="text-center text-gray-800 font-semibold"></p>
-				</div>
-				<div>
-					<canvas id="c2" width="150" height="150">
-						Your browser does not support the HTML5 canvas tag.
-					</canvas>
-					<p id="e2" class="text-center text-gray-800 font-semibold"></p>
-				</div>
-				<div>
-					<canvas id="c3" width="150" height="150">
-						Your browser does not support the HTML5 canvas tag.
-					</canvas>
-					<p id="e3" class="text-center text-gray-800 font-semibold"></p>
-				</div>
-				<div>
-					<canvas id="c4" width="150" height="150">
-						Your browser does not support the HTML5 canvas tag.
-					</canvas>
-					<p id="e4" class="text-center text-gray-800 font-semibold"></p>
+			<div id="circles-area" class="space-y-8" hidden>
+				<h2 class="text-2xl font-semibold text-center">Top 5 causas de muerte</h2>
+				<div class="flex flex-row text-sm" >
+					<div>
+						<canvas id="c0" width="150" height="150">
+							Your browser does not support the HTML5 canvas tag.
+						</canvas>
+						<p id="e0" class="text-center text-gray-800"></p>
+						<p id="n0" class="text-center text-emerald-600 font-semibold"></p>
+					</div>
+					<div>
+						<canvas id="c1" width="150" height="150">
+							Your browser does not support the HTML5 canvas tag.
+						</canvas>
+						<p id="e1" class="text-center text-gray-800"></p>
+						<p id="n1" class="text-center text-emerald-600 font-semibold"></p>
+					</div>
+					<div>
+						<canvas id="c2" width="150" height="150">
+							Your browser does not support the HTML5 canvas tag.
+						</canvas>
+						<p id="e2" class="text-center text-gray-800"></p>
+						<p id="n2" class="text-center text-emerald-600 font-semibold"></p>
+					</div>
+					<div>
+						<canvas id="c3" width="150" height="150">
+							Your browser does not support the HTML5 canvas tag.
+						</canvas>
+						<p id="e3" class="text-center text-gray-800"></p>
+						<p id="n3" class="text-center text-emerald-600 font-semibold"></p>
+					</div>
+					<div>
+						<canvas id="c4" width="150" height="150">
+							Your browser does not support the HTML5 canvas tag.
+						</canvas>
+						<p id="e4" class="text-center text-gray-800"></p>
+						<p id="n4" class="text-center text-emerald-600 font-semibold" ></p>
+					</div>
 				</div>
 			</div>
 			<div id="information-area" hidden>
@@ -85,11 +92,11 @@
 
 		// User variables
 		var year = '2016';
-		var province = 'VALENCIA';
-		var municipality = 'SAGUNTO';
+		var province = 'ALL';
+		var municipality = 'ALL';
 		var cause_of_death = 'ALL';
-		var genre = 'HOMBRE';
-		var age = 'ALL';
+		var genre = 'ALL';
+		var age = '0';
 
 		// Global vaiarbles
 		var data = getData(); // load local data
@@ -158,6 +165,11 @@
 			// Escribir top5 enfermedades
 			for (let i = 0; i < 5; i++) {
 				document.getElementById("e" + i).innerHTML = top5[i][0];            
+			}
+
+			// Escribir número de top5 enfermedades
+			for (let i = 0; i < 5; i++) {
+				document.getElementById("n" + i).innerHTML = top5[i][1];            
 			}
 
 		}
