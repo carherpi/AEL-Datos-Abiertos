@@ -9,11 +9,13 @@
   </head>
 
   <body class="bg-zinc-100 font-sans px-20" onload="init()">
+
+	
 	
 	<h1 class="text-3xl text-center font-bold text-gray-800 my-12">Datos Médicos de Mortalidad de la Comunidad Valenciana</h1>
 
-	<div class="grid grid-cols-2 gap-4">
-		<div class="space-y-10">    
+	<div class="grid grid-cols-4 gap-4">
+		<div class="col-span-3 space-y-10">    
 			<div class="text-sm  flex flex-row space-x-4 ">
 				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
 					Año					
@@ -33,12 +35,14 @@
 							<option value="ALL">Todas</option>
 						</select>
 				</div>
+				<!--
 				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
 					Causa					
 						<select id="b3" class="ml-2 hover:cursor-pointer " onchange="activeDropMenu(this.id)">
 							<option value="ALL">Todas</option>
 						</select>
 				</div>
+				-->
 				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
 					Género					
 						<select id="b4" class="ml-2 hover:cursor-pointer " onchange="activeDropMenu(this.id)">
@@ -93,6 +97,7 @@
 					</div>
 				</div>
 			</div>
+			<div>
 			<div id="information-area" hidden>
 				<h2 class="text-2xl text-gray-800 font-bold">Información:</h2>
 				<div class="flex flex-col space-y-1">                
@@ -102,7 +107,9 @@
 					<p id="s3" class="text-lg text-gray-800 "></p>
 					<p id="s4" class="text-lg text-gray-800 "></p>
 					<p id="s5" class="text-lg text-gray-800 "></p>
+					<a id="query" href="" target="_blank" class="text-blue-600 text-sm mt-4"></a> 
 				</div>
+			</div>
 			</div>
 		</div>
 		
@@ -132,6 +139,7 @@
 		var most_common_dict = {};
 		var total_community_deaths = 0;
 		var top5;
+		var most_common;
 
 
 		// init
@@ -189,6 +197,7 @@
 							let newOption = new Option(element.toUpperCase(), element);
 							selectBox.add(newOption,undefined);
 						})
+
 						break;
 					case 'b2': 
 						municipalities.forEach(element => {
@@ -326,7 +335,7 @@
 			// Escribir top5 enfermedades y Escribir número de top5 enfermedades
 			for (let i = 0; i < top5.length; i++) {
 				document.getElementById("e" + i).innerHTML = top5[i][0];   
-				document.getElementById("n" + i).innerHTML = top5[i][1];  				
+				document.getElementById("n" + i).innerHTML = top5[i][1] +  ` ${top5[i][1] > 1 ? ' fallecimientos' : ' fallecimiento'}`;  				
 			}
 
 		}
@@ -351,7 +360,7 @@
 
 
 			// s1            
-			var most_common = getMostCommonCauseOfDeath();
+			most_common = getMostCommonCauseOfDeath();
 
 			document.getElementById("s1").innerHTML = `La causa más común de fallecimiento ${people} en ${population}  es ${most_common[0]} con un total de ${most_common[1]}.`;
 
@@ -390,23 +399,46 @@
 		}
 
 		function redrawMap() {
-			// m1
-			document.getElementById("m1").innerHTML = `${municipality}`;
 
-			var ref = document.getElementById("gmap_canvas");    
-			ref.src = `https://maps.google.com/maps?hl=es&q=${municipality}&t=&z=7&ie=UTF8&iwloc=&output=embed`;
+			var ref = document.getElementById("gmap_canvas");
 
+			if (municipality != 'ALL') {
+
+				// m1
+				document.getElementById("m1").innerHTML = `${municipality}`;
+				ref.src = `https://maps.google.com/maps?hl=es&q=${municipality}&t=&z=7&ie=UTF8&iwloc=&output=embed`;
+
+			} else if (province != 'ALL'){
+				document.getElementById("m1").innerHTML = `${province}`;
+				ref.src = `https://maps.google.com/maps?hl=es&q=${province}&t=&z=7&ie=UTF8&iwloc=&output=embed`;
+			} else {
+				document.getElementById("m1").innerHTML = `Comunidad Valenciana`;
+				ref.src = `https://maps.google.com/maps?hl=es&q=Comunidad+Valenciana&t=&z=7&ie=UTF8&iwloc=&output=embed`;
+			}
+
+		}
+
+		function redoQuery() {
+			var ref = document.getElementById("query");
+
+			let disease = most_common[0];
+			
+			if (disease != 'ALL') {
+				document.getElementById("query").innerHTML = `¿Qué son ${disease.toLowerCase()} ? `;
+				ref.href = `https://www.google.com/search?q=${disease}`;
+			}
 		}
 
 		function search() {
 
-			document.getElementById("map-area").hidden = true;
+			document.getElementById("map-area").hidden = false;
 			document.getElementById("circles-area").hidden = false;
 			document.getElementById("information-area").hidden = false;			
 			
 			rewriteSentences(); 
 			redrawCircles(); 			
-			redrawMap();  
+			redrawMap(); 
+			redoQuery(); 
 
 		}
 
@@ -522,8 +554,6 @@
 					total_community_deaths_by_cause += element['NUM_FALLECIDOS'];
 				}
 			});
-
-			console.log((total_community_deaths_by_cause * 100 / total_community_deaths))
 
 			return parseFloat(total_community_deaths_by_cause * 100 / total_community_deaths).toFixed(2);
 		}
