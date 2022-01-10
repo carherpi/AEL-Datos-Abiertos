@@ -42,7 +42,7 @@
 				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
 					Género					
 						<select id="b4" class="ml-2 hover:cursor-pointer " onchange="activeDropMenu(this.id)">
-							<option value="ALL">Todas</option>
+							<option value="ALL">Todos</option>
 						</select>
 				</div>
 				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
@@ -52,8 +52,6 @@
 						</select>
 				</div>
 			</div>		
-
-			<button class="bg-blue-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl" onclick="search()">Search</button>
 
 			<div id="circles-area" class="space-y-8" hidden>
 				<h2 class="text-2xl font-semibold text-center">Top 5 causas de muerte</h2>
@@ -107,6 +105,7 @@
 				</div>
 			</div>
 		</div>
+		
 		<div id="map-area" class="space-y-2" hidden>
 			<div class="flex flex-row place-content-center text-emerald-600 space-x-2">
 				<div class="w-5"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="location-dot" class="svg-inline--fa fa-location-dot" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M168.3 499.2C116.1 435 0 279.4 0 192C0 85.96 85.96 0 192 0C298 0 384 85.96 384 192C384 279.4 267 435 215.7 499.2C203.4 514.5 180.6 514.5 168.3 499.2H168.3zM192 256C227.3 256 256 227.3 256 192C256 156.7 227.3 128 192 128C156.7 128 128 156.7 128 192C128 227.3 156.7 256 192 256z"></path></svg></div>
@@ -121,18 +120,18 @@
 	<script>        
 
 		// User variables
-		var year = '2016';
-		var province = '';
+		var year = 'ALL';
+		var province = 'ALL';
 		var municipality = 'ALL';
 		var cause_of_death = 'ALL';
 		var genre = 'ALL';
-		var age = '0';
+		var age = 'ALL';
 
 		// Global vaiarbles
 		var data = getData(); // load local data
 		var most_common_dict = {};
 		var total_community_deaths = 0;
-		console.log(data[0])
+		//console.log(data[0])
 
 
 		// init
@@ -145,6 +144,7 @@
 			var genres = [];
 			var ages = [];
 
+			// Crear un array para cada elemento del drop menu
 			data.forEach(element => {
 				if (!years.includes(element['ANYO'])) {
 					years.push(element['ANYO'])
@@ -171,6 +171,7 @@
 				}
 			});
 
+			// Rellena el drop menu con cada array
 			for (let i = 0; i <= 5; i++) { 
 
 				var id = "b" + i.toString();
@@ -218,27 +219,16 @@
 					default:
 										
 				}
-			}
-			
-			/*
-			for (let i = 0; i < 5; i++) { 
+			}				
 
-				var id = "b" + i.toString();
-				var selectBox = document.getElementById(id);
-
-				for (let j = 0; j < data.length; j++) {
-					let option = document.getElementById(id).querySelector('[value="' + data[i][] + '"]');
-					let newOption = new Option('Option Text','Option Value');
-					selectBox.add(newOption,undefined);
-				}			
-							
-			}
-			*/	
-
+			// Calcula el total de muertes de la CV
+			total_community_deaths  = totalCommunityDeaths();
 		} 
 
 		// Menu
 		function activeDropMenu(id) {
+
+
 
 			switch (id) {
 				case 'b0':
@@ -263,6 +253,7 @@
 									
 			}
 
+			console.log("Search!")
 			search();
 		}
 
@@ -396,11 +387,9 @@
 
 		function search() {
 
-			document.getElementById("map-area").hidden = false;
+			document.getElementById("map-area").hidden = true;
 			document.getElementById("circles-area").hidden = false;
-			document.getElementById("information-area").hidden = false;
-
-			total_community_deaths  = totalCommunityDeaths();
+			document.getElementById("information-area").hidden = false;			
 			
 			rewriteSentences(); 
 			redrawCircles(); 			
@@ -461,7 +450,7 @@
 				}
 			});
 
-			console.log(most_common_dict);
+			//console.log(most_common_dict);
 
 			// Busca la top1 enfermedad en el objeto de muertes
 			let most_common_cause_of_death = [undefined, 0];
