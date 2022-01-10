@@ -131,7 +131,7 @@
 		var data = getData(); // load local data
 		var most_common_dict = {};
 		var total_community_deaths = 0;
-		//console.log(data[0])
+		var top5;
 
 
 		// init
@@ -223,6 +223,9 @@
 
 			// Calcula el total de muertes de la CV
 			total_community_deaths  = totalCommunityDeaths();
+
+			// Calcula el top5 enfermedades
+			top5 = getTop5CauseOfDeath();
 		} 
 
 		// Menu
@@ -287,11 +290,7 @@
 			// Máx radio de las burbujas
 			max = 70;
 
-			// Devuelve el top5 enfermedades. TODO: Aplicar criterios
-			top5 = getTop5CauseOfDeath();
-
-			console.log(top5);
-
+			
 			// Calcula el total de muertes de las top5 enfermedades
 			total = 0;
 			for (let i = 0; i < top5.length; i++) {
@@ -343,6 +342,8 @@
 				  
 			var age_range = `${age == 'ALL' ? ' de todas las edades ' : `${age.includes('-') ? 'de entre ' + age + ' años ' : `${age.includes('>') ? ' de ' + age + ' años ' : ' recién nacidos '}`}`}`;
 
+			
+
 			// s0
 			var total_local_deaths = getTotalDeaths();
 
@@ -380,9 +381,11 @@
 
 
 			// s5
-			var porcentajeS5 = '60' /* TODO: Crear función que calcule esto */
-
-			document.getElementById("s5").innerHTML = `El ${porcentajeS5}% de los fallecimientos de ${cause_of_death} fueron ${genre == 'Hombre' ? genre + 's' : genre +'es'}.`;
+			top5 = getTop5CauseOfDeath();
+			
+			var porcentajeS5 = calculateRelativePercentageOfDeaths();
+			document.getElementById("s5").innerHTML = `El ${porcentajeS5}% de los fallecimientos de la Comunidad Valenciana es debido a ${most_common[0]}.`;
+			
 			
 		}
 
@@ -484,7 +487,7 @@
 			let most_common_array = Object.entries(most_common_dict);
 			let sorted = most_common_array.sort((a, b) => a[1] - b[1]);
 
-			var top5 = sorted.slice(-5).reverse(); // top 5 descendant
+			top5 = sorted.slice(-5).reverse(); // top 5 descendant
 
 			//console.log(top5);
 
@@ -510,6 +513,19 @@
 			});
 
 			return Math.round((total_population_deaths * 100 / total_community_deaths));
+		}
+
+		function calculateRelativePercentageOfDeaths() {
+			let total_community_deaths_by_cause = 0;
+			data.forEach(element => {
+				if(element['DESC_CAUSA'] == top5[0][0]) { // top5[0][0] la enfermedad más mortífera
+					total_community_deaths_by_cause += element['NUM_FALLECIDOS'];
+				}
+			});
+
+			console.log((total_community_deaths_by_cause * 100 / total_community_deaths))
+
+			return parseFloat(total_community_deaths_by_cause * 100 / total_community_deaths).toFixed(2);
 		}
 
 
