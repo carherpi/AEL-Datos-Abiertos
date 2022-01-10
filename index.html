@@ -8,20 +8,50 @@
 	<script src="https://cdn.tailwindcss.com"></script>    
   </head>
 
-  <body class="bg-zinc-100 font-sans px-20">
+  <body class="bg-zinc-100 font-sans px-20" onload="init()">
 	
 	<h1 class="text-3xl text-center font-bold text-gray-800 my-12">Datos Médicos de Mortalidad de la Comunidad Valenciana</h1>
 
 	<div class="grid grid-cols-2 gap-4">
 		<div class="space-y-10">    
 			<div class="text-sm  flex flex-row space-x-4 ">
-				<button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl">AÑO</button>                
-				<button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl">PROVINCIA</button>
-				<button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl">MUNICIPIO</button>
-				<button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl">CAUSA DE FALLECIMIENTO</button>
-				<button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl">GÉNERO</button>
-				<button class="bg-emerald-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl">EDAD</button>
-			</div>
+				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
+					Año					
+						<select id="b0" class="ml-2 hover:cursor-pointer " onchange="activeDropMenu(this.id)">
+							<option value="ALL">Todos</option>
+						</select>
+				</div>
+				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
+					Provincia					
+						<select id="b1" class="ml-2 hover:cursor-pointer " onchange="activeDropMenu(this.id)">
+							<option value="ALL">Todas</option>
+						</select>
+				</div>
+				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
+					Municipio					
+						<select id="b2" class="ml-2 hover:cursor-pointer " onchange="activeDropMenu(this.id)">
+							<option value="ALL">Todas</option>
+						</select>
+				</div>
+				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
+					Causa					
+						<select id="b3" class="ml-2 hover:cursor-pointer " onchange="activeDropMenu(this.id)">
+							<option value="ALL">Todas</option>
+						</select>
+				</div>
+				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
+					Género					
+						<select id="b4" class="ml-2 hover:cursor-pointer " onchange="activeDropMenu(this.id)">
+							<option value="ALL">Todas</option>
+						</select>
+				</div>
+				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
+					Edad					
+						<select id="b5" class="ml-2 hover:cursor-pointer " onchange="activeDropMenu(this.id)">
+							<option value="ALL">Todas</option>
+						</select>
+				</div>
+			</div>		
 
 			<button class="bg-blue-600 p-1 rounded-lg font-semibold text-white drop-shadow-xl" onclick="search()">Search</button>
 
@@ -92,7 +122,7 @@
 
 		// User variables
 		var year = '2016';
-		var province = 'ALL';
+		var province = '';
 		var municipality = 'ALL';
 		var cause_of_death = 'ALL';
 		var genre = 'ALL';
@@ -104,7 +134,138 @@
 		var total_community_deaths = 0;
 		console.log(data[0])
 
-		
+
+		// init
+		function init() {
+
+			var years = [];
+			var provinces = [];
+			var municipalities = [];
+			var causes = [];
+			var genres = [];
+			var ages = [];
+
+			data.forEach(element => {
+				if (!years.includes(element['ANYO'])) {
+					years.push(element['ANYO'])
+				}
+
+				if (!provinces.includes(element['NOM_PROV'])) {
+					provinces.push(element['NOM_PROV'])
+				}
+
+				if (!municipalities.includes(element['NOM_MUN'])) {
+					municipalities.push(element['NOM_MUN'])
+				}
+
+				if (!causes.includes(element['DESC_CAUSA'])) {
+					causes.push(element['DESC_CAUSA'])
+				}
+
+				if (!genres.includes(element['DESC_GENERO'])) {
+					genres.push(element['DESC_GENERO'])
+				}
+
+				if (!ages.includes(element['RANGO_EDAD'])) {
+					ages.push(element['RANGO_EDAD'])
+				}
+			});
+
+			for (let i = 0; i <= 5; i++) { 
+
+				var id = "b" + i.toString();
+				var selectBox = document.getElementById(id);
+
+				switch (id) {
+					case 'b0':
+						years.forEach(element => {
+							let newOption = new Option(element, element);
+							selectBox.add(newOption,undefined);
+						})
+						break;
+					case 'b1': 
+						provinces.forEach(element => {
+							let newOption = new Option(element.toUpperCase(), element);
+							selectBox.add(newOption,undefined);
+						})
+						break;
+					case 'b2': 
+						municipalities.forEach(element => {
+							let newOption = new Option(element.toUpperCase(), element);
+							selectBox.add(newOption,undefined);
+						})
+						break; 
+					case 'b3':
+						/*
+						causes.forEach(element => {
+							let newOption = new Option(element.toUpperCase(), element);
+							selectBox.add(newOption,undefined);
+						})
+						*/
+						break;
+					case 'b4':
+						genres.forEach(element => {
+							let newOption = new Option(element.toUpperCase(), element);
+							selectBox.add(newOption,undefined);
+						})
+						break;
+					case 'b5':
+						ages.forEach(element => {
+							let newOption = new Option(element.toString().toUpperCase(), element);
+							selectBox.add(newOption,undefined);
+						})
+						break;
+					default:
+										
+				}
+			}
+			
+			/*
+			for (let i = 0; i < 5; i++) { 
+
+				var id = "b" + i.toString();
+				var selectBox = document.getElementById(id);
+
+				for (let j = 0; j < data.length; j++) {
+					let option = document.getElementById(id).querySelector('[value="' + data[i][] + '"]');
+					let newOption = new Option('Option Text','Option Value');
+					selectBox.add(newOption,undefined);
+				}			
+							
+			}
+			*/	
+
+		} 
+
+		// Menu
+		function activeDropMenu(id) {
+
+			switch (id) {
+				case 'b0':
+					year = document.getElementById(id).value;
+					break;
+				case 'b1': 
+					province = document.getElementById(id).value.toUpperCase();
+					break;
+				case 'b2': 
+					municipality = document.getElementById(id).value.toUpperCase();
+					break; 
+				case 'b3':
+					cause_of_death = document.getElementById(id).value.toUpperCase();
+					break;
+				case 'b4':
+					genre = document.getElementById(id).value.toUpperCase();
+					break;
+				case 'b5':
+					age = document.getElementById(id).value.toUpperCase();
+					break;
+				default:
+									
+			}
+
+			search();
+		}
+
 		// Graphics
 		function loadBubbles(){
 
@@ -204,9 +365,7 @@
 			// s3
 
 			if (province != 'ALL') {
-
-				var porcentajeS3 = calculateTotalPercentageOfDeaths() 
-
+				var porcentajeS3 = calculateTotalPercentageOfDeaths()
 				document.getElementById("s3").innerHTML = `${population.charAt(0).toUpperCase() + population.slice(1)} representa un ${porcentajeS3}% del total de fallecimientos de la Comunidad Valenciana.`;
 			} else {
 				document.getElementById("s3").innerHTML = ``;
