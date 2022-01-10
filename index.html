@@ -327,7 +327,7 @@
 
 		function rewriteSentences() {
 
-			var time = `${year == 'ALL' ? ' en todos los años': ' en el año ' + year }`;
+			var time = `${year == 'ALL' ? ' en el año 2016' : ' en el año ' + year }`;
 
 			var population = `${province == 'ALL' ? ' la Comunidad Valenciana ': `${municipality == 'ALL' ? 'la provincia de ' + `${province}` : `el municipio de ${municipality}`}`}`;
 
@@ -338,7 +338,7 @@
 			// s0
 			var total_local_deaths = getTotalDeaths();
 
-			document.getElementById("s0").innerHTML = `En  ${population} ${total_local_deaths == 1 ? ' hubo ' + `${total_local_deaths}` +  ' fallecimiento' : ' hubieron ' + `${total_local_deaths}` + ' fallecimientos'} ${people} ${time}.`;
+			document.getElementById("s0").innerHTML = `En  ${population} ${total_local_deaths == 1 ? ' hubo ' + `${total_local_deaths}` +  ' fallecimiento' : ' hubieron ' + `${total_local_deaths}` + ' fallecimientos'} ${people} ${age_range} ${time}.`;
 
 
 			// s1            
@@ -363,6 +363,7 @@
 			}
 
 
+			
 			// s4
 			var rankingMunicipality = '3' /* TODO: Crear función que calcule esto */
 			var rankingRegion = '17' /* TODO: Crear función que calcule esto */
@@ -374,6 +375,7 @@
 			var porcentajeS5 = '60' /* TODO: Crear función que calcule esto */
 
 			document.getElementById("s5").innerHTML = `El ${porcentajeS5}% de los fallecimientos de ${cause_of_death} fueron ${genre == 'Hombre' ? genre + 's' : genre +'es'}.`;
+			
 		}
 
 		function redrawMap() {
@@ -426,6 +428,8 @@
 		// Calcula el número total de muertes en base a los parámetros elegidos por el usuario
 		function getTotalDeaths() {
 
+			console.log(data)
+
 			let total_deaths = 0;
 			data.forEach(element => {
 				if (checkElement(element)) {
@@ -439,6 +443,8 @@
 
 		function getMostCommonCauseOfDeath() {
 
+			most_common_dict = {}
+			
 			// recorrer todos los datos           			
 			data.forEach(element => {				
 				if (checkElement(element)) {
