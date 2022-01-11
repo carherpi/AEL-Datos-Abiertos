@@ -145,9 +145,9 @@
 		var most_common;
 
 		// Municipalities
-		var castellon = ['CASTELLÓN DE LA PLANA']
-		var valencia = ['VALENCIA', 'GANDIA', 'PATERNA', 'SAGUNTO', 'TORRENT']
-		var alicante = ['ALICANTE', 'ALCOY', 'BENIDORM', 'ELCHE', 'ELDA', 'ORIHUELA', 'TORREVIEJA']
+		var castellon = [['CASTELLÓN DE LA PLANA', '170.244']]
+		var valencia = [['VALENCIA', '790.201'], ['GANDIA', '74.814'], ['PATERNA', '67.854'], ['SAGUNTO', '64.439'], ['TORRENT','80.762']]
+		var alicante = [['ALICANTE', '331.577'], ['ALCOY', '59.198'], ['BENIDORM', '66.642'], ['ELCHE', '227.659'], ['ELDA', '52.745'], ['ORIHUELA', '80.359'], ['TORREVIEJA', '84.213']]
 
 		// init
 		function init() {
@@ -261,16 +261,25 @@
 				case 'b2': 
 					municipality = document.getElementById(id).value.toUpperCase();
 
-					let i;
-					if (castellon.includes(municipality)) {
-						i = 2;
-					} else if (valencia.includes(municipality)) {
-						i = 3;
-					} else if (alicante.includes(municipality)) {
-						i = 1;
-					} else {
-						i = 0
-					}
+					let i = 0;
+					castellon.forEach(element => {
+						if (element.includes(municipality)) {
+							i = 2;
+						}
+					});
+
+					valencia.forEach(element => {
+						if (element.includes(municipality)) {
+							i = 3;
+						}
+					});
+
+					alicante.forEach(element => {
+						if (element.includes(municipality)) {
+							i = 1;
+						}
+					});
+
 					document.getElementById('b1').options[i].selected = 'selected';
 					province = document.getElementById('b1').value.toUpperCase();
 					
@@ -397,10 +406,10 @@
 			document.getElementById("s1").innerHTML = `La causa más común de fallecimiento ${people} en ${population} para esa franja de edad es ${most_common[0]} con un total de ${most_common[1]}.`;
 
 
-			// s2
-			var porcentajeS2 = calculatePercentageOfDeaths(total_local_deaths, most_common);
+			// s2		
 
 			if (most_common[0] != undefined) {
+				var porcentajeS2 = calculatePercentageOfDeaths(total_local_deaths, most_common);
 				document.getElementById("s2").innerHTML = `${porcentajeS2} de cada 100 fallecimientos ${people} ${age_range} en ${population} es debido a ${most_common[0]}.`;
 			} else {
 				document.getElementById("s5").innerHTML = '';
@@ -408,7 +417,6 @@
 
 
 			// s3
-
 			if (province != 'ALL') {
 				var porcentajeS3 = calculateTotalPercentageOfDeaths()
 				document.getElementById("s3").innerHTML = `${population.charAt(0).toUpperCase() + population.slice(1)} representa un ${porcentajeS3}% del total de fallecimientos de la Comunidad Valenciana.`;
@@ -419,11 +427,31 @@
 
 			
 			// s4
-			var rankingMunicipality = '3' /* TODO: Crear función que calcule esto */
-			var rankingRegion = '17' /* TODO: Crear función que calcule esto */
+			if (municipality != 'ALL') {
+				var rankingMunicipality = '3' /* TODO: Crear función que calcule esto */
+				var rankingRegion = '17' /* TODO: Crear función que calcule esto */
 
-			document.getElementById("s4").innerHTML = `${municipality } es la ${rankingMunicipality}º población más grande de la provincia de ${province} y la ${rankingRegion}º de la Comunidad Valenciana.`;
+				let inhabitants;
+				castellon.forEach(element => {
+					if (element.includes(municipality)) {
+						inhabitants = element[1]
+					}
+				});
 
+				valencia.forEach(element => {
+					if (element.includes(municipality)) {
+						inhabitants = element[1]
+					}
+				});
+
+				alicante.forEach(element => {
+					if (element.includes(municipality)) {
+						inhabitants = element[1]
+					}
+				});
+
+				document.getElementById("s4").innerHTML = `En ${municipality} hubo ${inhabitants} habitantes en el año 2016.`;
+			}
 
 			// s5
 			top5 = getTop5CauseOfDeath();
