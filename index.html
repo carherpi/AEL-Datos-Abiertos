@@ -266,8 +266,10 @@
 						i = 2;
 					} else if (valencia.includes(municipality)) {
 						i = 3;
-					} else {
+					} else if (alicante.includes(municipality)) {
 						i = 1;
+					} else {
+						i = 0
 					}
 					document.getElementById('b1').options[i].selected = 'selected';
 					province = document.getElementById('b1').value.toUpperCase();
