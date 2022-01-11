@@ -59,40 +59,43 @@
 
 			<div id="circles-area" class="space-y-8" hidden>
 				<h2 class="text-2xl font-semibold text-center">Top 5 causas de muerte</h2>
-				<div class="flex flex-row text-sm" >
+				<div class="flex flex-row justify-start text-sm" >
 					<div>
-						<canvas id="c0" width="150" height="150">
+						<!--
+						<div class="rounded-full w-32 h-32 bg-red-600"></div>
+						-->
+						<canvas id="c0">
 							Your browser does not support the HTML5 canvas tag.
 						</canvas>
-						<p id="e0" class="text-center text-gray-800"></p>
+						<p id="e0" class="text-center text-gray-800 w-60"></p>
 						<p id="n0" class="text-center text-emerald-600 font-semibold"></p>
 					</div>
 					<div>
-						<canvas id="c1" width="150" height="150">
+						<canvas id="c1">
 							Your browser does not support the HTML5 canvas tag.
 						</canvas>
-						<p id="e1" class="text-center text-gray-800"></p>
+						<p id="e1" class="text-center text-gray-800 w-60"></p>
 						<p id="n1" class="text-center text-emerald-600 font-semibold"></p>
 					</div>
 					<div>
-						<canvas id="c2" width="150" height="150">
+						<canvas id="c2">
 							Your browser does not support the HTML5 canvas tag.
 						</canvas>
-						<p id="e2" class="text-center text-gray-800"></p>
+						<p id="e2" class="text-center text-gray-800 w-60"></p>
 						<p id="n2" class="text-center text-emerald-600 font-semibold"></p>
 					</div>
 					<div>
-						<canvas id="c3" width="150" height="150">
+						<canvas id="c3">
 							Your browser does not support the HTML5 canvas tag.
 						</canvas>
-						<p id="e3" class="text-center text-gray-800"></p>
+						<p id="e3" class="text-center text-gray-800 w-60"></p>
 						<p id="n3" class="text-center text-emerald-600 font-semibold"></p>
 					</div>
 					<div>
-						<canvas id="c4" width="150" height="150">
+						<canvas id="c4">
 							Your browser does not support the HTML5 canvas tag.
 						</canvas>
-						<p id="e4" class="text-center text-gray-800"></p>
+						<p id="e4" class="text-center text-gray-800 w-60"></p>
 						<p id="n4" class="text-center text-emerald-600 font-semibold" ></p>
 					</div>
 				</div>
@@ -267,20 +270,25 @@
 		}
 
 		// Graphics
+		/*
 		function loadBubbles(){
 
 			for (let i = 0; i < 5; i++) {            
 				var c = document.getElementById("c" + i.toString());
+				
+				console.log(c.width)
 				var ctx = c.getContext("2d");
+				console.log(ctx.width)
 				ctx.beginPath();
 				if (i == 0) {
-					ctx.arc(75, 75, 70, 0, 2 * Math.PI);
+					ctx.arc(150, 150, 70, 0, 2 * Math.PI);
 				} else {
 					ctx.arc(75, 75, 70 / i, 0, 2 * Math.PI);
 				}
 				ctx.stroke();
 			}
 		}
+		*/
 
 
 		function redrawCircles() {
@@ -290,7 +298,6 @@
 				var c = document.getElementById("c" + i.toString());
 				var ctx = c.getContext("2d");
 				ctx.clearRect(0, 0, c.width, c.height);
-
 				// borar textos
 				document.getElementById("e" + i).innerHTML = ''
 				document.getElementById("n" + i).innerHTML = ''
@@ -314,6 +321,16 @@
 
 			//console.log("Total: " + total, " Máx Porc: " + max_porcentaje);
 
+			
+
+
+			// Escribir top5 enfermedades y Escribir número de top5 enfermedades
+			for (let i = 0; i < top5.length; i++) {
+				document.getElementById("e" + i).innerHTML = top5[i][0]
+				document.getElementById("n" + i).innerHTML = top5[i][1] +  ` ${top5[i][1] > 1 ? ' fallecimientos' : ' fallecimiento'}`;  				
+			}
+
+
 			for (let i = 0; i < top5.length; i++) {
 
 				// Calcula el porcentaje relativo con respecto al total
@@ -321,21 +338,16 @@
 
 				factor = (porcentaje * 1 / max_porcentaje)
 
-				//console.log("Porcentaje: " + porcentaje, " Factor: " + factor)
+				let w = document.getElementById("e" + i).offsetWidth;
+				console.log(w)
 
 				var c = document.getElementById("c" + i.toString());
+				c.width = w;
 				var ctx = c.getContext("2d");
 				ctx.clearRect(0, 0, c.width, c.height);
 				ctx.beginPath();
-				ctx.arc(75, 75, max * factor, 0, 2 * Math.PI);
+				ctx.arc(w/2, c.height/2, max * factor, 0, 2 * Math.PI);
 				ctx.stroke();                
-			}
-
-
-			// Escribir top5 enfermedades y Escribir número de top5 enfermedades
-			for (let i = 0; i < top5.length; i++) {
-				document.getElementById("e" + i).innerHTML = top5[i][0];   
-				document.getElementById("n" + i).innerHTML = top5[i][1] +  ` ${top5[i][1] > 1 ? ' fallecimientos' : ' fallecimiento'}`;  				
 			}
 
 		}
