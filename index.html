@@ -16,7 +16,7 @@
 
 	<div class="grid grid-cols-4 gap-4">
 		<div class="col-span-3 space-y-10">    
-			<div class="text-sm  flex flex-row space-x-4 ">
+			<div class="text-sm flex flex-row space-x-4 ">
 				<div type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 cursor-default" id="menu-button" aria-expanded="true" aria-haspopup="true">
 					Año					
 						<select id="b0" class="ml-2 hover:cursor-pointer " onchange="activeDropMenu(this.id)">
@@ -144,6 +144,10 @@
 		var top5;
 		var most_common;
 
+		// Municipalities
+		var castellon = ['CASTELLÓN DE LA PLANA']
+		var valencia = ['VALENCIA', 'GANDIA', 'PATERNA', 'SAGUNTO', 'TORRENT']
+		var alicante = ['ALICANTE', 'ALCOY', 'BENIDORM', 'ELCHE', 'ELDA', 'ORIHUELA', 'TORREVIEJA']
 
 		// init
 		function init() {
@@ -249,9 +253,25 @@
 					break;
 				case 'b1': 
 					province = document.getElementById(id).value.toUpperCase();
+					if (province == 'ALL') {
+						municipality = 'ALL'
+						document.getElementById('b2').options[0].selected = 'selected';
+					}				
 					break;
 				case 'b2': 
 					municipality = document.getElementById(id).value.toUpperCase();
+
+					let i;
+					if (castellon.includes(municipality)) {
+						i = 2;
+					} else if (valencia.includes(municipality)) {
+						i = 3;
+					} else {
+						i = 1;
+					}
+					document.getElementById('b1').options[i].selected = 'selected';
+					province = document.getElementById('b1').value.toUpperCase();
+					
 					break; 
 				case 'b3':
 					cause_of_death = document.getElementById(id).value.toUpperCase();
@@ -269,27 +289,7 @@
 			search();
 		}
 
-		// Graphics
-		/*
-		function loadBubbles(){
-
-			for (let i = 0; i < 5; i++) {            
-				var c = document.getElementById("c" + i.toString());
-				
-				console.log(c.width)
-				var ctx = c.getContext("2d");
-				console.log(ctx.width)
-				ctx.beginPath();
-				if (i == 0) {
-					ctx.arc(150, 150, 70, 0, 2 * Math.PI);
-				} else {
-					ctx.arc(75, 75, 70 / i, 0, 2 * Math.PI);
-				}
-				ctx.stroke();
-			}
-		}
-		*/
-
+		// Graphics		
 
 		function redrawCircles() {
 
@@ -351,6 +351,25 @@
 
 		}
 
+		function redrawMap() {
+
+			var ref = document.getElementById("gmap_canvas");
+
+			if (municipality != 'ALL') {
+
+				// m1
+				document.getElementById("m1").innerHTML = `${municipality}`;
+				ref.src = `https://maps.google.com/maps?hl=es&q=${municipality}&t=&z=7&ie=UTF8&iwloc=&output=embed`;
+
+			} else if (province != 'ALL'){
+				document.getElementById("m1").innerHTML = `${province}`;
+				ref.src = `https://maps.google.com/maps?hl=es&q=${province}&t=&z=7&ie=UTF8&iwloc=&output=embed`;
+			} else {
+				document.getElementById("m1").innerHTML = `Comunidad Valenciana`;
+				ref.src = `https://maps.google.com/maps?hl=es&q=Comunidad+Valenciana&t=&z=7&ie=UTF8&iwloc=&output=embed`;
+			}
+
+		}
 
 		function rewriteSentences() {
 
@@ -379,7 +398,6 @@
 			// s2
 			var porcentajeS2 = calculatePercentageOfDeaths(total_local_deaths, most_common);
 
-			console.log(porcentajeS2)
 			if (most_common[0] != undefined) {
 				document.getElementById("s2").innerHTML = `${porcentajeS2} de cada 100 fallecimientos ${people} ${age_range} en ${population} es debido a ${most_common[0]}.`;
 			} else {
@@ -418,26 +436,6 @@
 			
 		}
 
-		function redrawMap() {
-
-			var ref = document.getElementById("gmap_canvas");
-
-			if (municipality != 'ALL') {
-
-				// m1
-				document.getElementById("m1").innerHTML = `${municipality}`;
-				ref.src = `https://maps.google.com/maps?hl=es&q=${municipality}&t=&z=7&ie=UTF8&iwloc=&output=embed`;
-
-			} else if (province != 'ALL'){
-				document.getElementById("m1").innerHTML = `${province}`;
-				ref.src = `https://maps.google.com/maps?hl=es&q=${province}&t=&z=7&ie=UTF8&iwloc=&output=embed`;
-			} else {
-				document.getElementById("m1").innerHTML = `Comunidad Valenciana`;
-				ref.src = `https://maps.google.com/maps?hl=es&q=Comunidad+Valenciana&t=&z=7&ie=UTF8&iwloc=&output=embed`;
-			}
-
-		}
-
 		function redoQuery() {
 			var ref = document.getElementById("query");
 
@@ -463,8 +461,7 @@
 			redoQuery(); 
 
 		}
-
-		// Comprueba si el elemento es válido
+		
 		function checkElement(element) {
 			if ((element['ANYO'] == year || year == 'ALL' )&& 
 				(element['NOM_PROV'] == province || province == 'ALL' ) &&
@@ -478,6 +475,7 @@
 			return false;
 		}
 		
+
 
 		// "API"
 
