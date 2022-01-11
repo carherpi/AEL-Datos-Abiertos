@@ -314,8 +314,8 @@
 			}
 			
 			// Guarda el porcentaje más alto
-			if (top5[0][1] != undefined) {
-				max_porcentaje = (top5[0][1] * 100 / total) / 100
+			if (most_common[1] != undefined) {
+				max_porcentaje = (most_common[1] * 100 / total) / 100
 			}
 
 
@@ -339,7 +339,6 @@
 				factor = (porcentaje * 1 / max_porcentaje)
 
 				let w = document.getElementById("e" + i).offsetWidth;
-				console.log(w)
 
 				var c = document.getElementById("c" + i.toString());
 				c.width = w;
@@ -374,13 +373,18 @@
 			// s1            
 			most_common = getMostCommonCauseOfDeath();
 
-			document.getElementById("s1").innerHTML = `La causa más común de fallecimiento ${people} en ${population}  es ${most_common[0]} con un total de ${most_common[1]}.`;
+			document.getElementById("s1").innerHTML = `La causa más común de fallecimiento ${people} en ${population} para esa franja de edad es ${most_common[0]} con un total de ${most_common[1]}.`;
 
 
 			// s2
 			var porcentajeS2 = calculatePercentageOfDeaths(total_local_deaths, most_common);
 
-			document.getElementById("s2").innerHTML = `${porcentajeS2} de cada 100 fallecimientos ${people} ${age_range} en ${population} es debido a ${most_common[0]}.`;
+			console.log(porcentajeS2)
+			if (most_common[0] != undefined) {
+				document.getElementById("s2").innerHTML = `${porcentajeS2} de cada 100 fallecimientos ${people} ${age_range} en ${population} es debido a ${most_common[0]}.`;
+			} else {
+				document.getElementById("s5").innerHTML = '';
+			}
 
 
 			// s3
@@ -404,8 +408,12 @@
 			// s5
 			top5 = getTop5CauseOfDeath();
 			
-			var porcentajeS5 = calculateRelativePercentageOfDeaths();
-			document.getElementById("s5").innerHTML = `El ${porcentajeS5}% de los fallecimientos de la Comunidad Valenciana es debido a ${most_common[0]}.`;
+			if (most_common[0] != undefined) {
+				var porcentajeS5 = calculateRelativePercentageOfDeaths();
+				document.getElementById("s5").innerHTML = `El ${porcentajeS5}% de los fallecimientos de la Comunidad Valenciana es debido a ${most_common[0]}.`;
+			} else {
+				document.getElementById("s5").innerHTML = '';
+			}
 			
 			
 		}
@@ -435,9 +443,11 @@
 
 			let disease = most_common[0];
 			
-			if (disease != 'ALL') {
+			if (disease != 'ALL' && disease != undefined) {
 				document.getElementById("query").innerHTML = `¿Qué son ${disease.toLowerCase()} ? `;
 				ref.href = `https://www.google.com/search?q=${disease}`;
+			} else {
+				document.getElementById("query").innerHTML = ``;
 			}
 		}
 
@@ -562,7 +572,7 @@
 		function calculateRelativePercentageOfDeaths() {
 			let total_community_deaths_by_cause = 0;
 			data.forEach(element => {
-				if(element['DESC_CAUSA'] == top5[0][0]) { // top5[0][0] la enfermedad más mortífera
+				if(element['DESC_CAUSA'] == most_common[0]) { // top5[0][0] la enfermedad más mortífera
 					total_community_deaths_by_cause += element['NUM_FALLECIDOS'];
 				}
 			});
